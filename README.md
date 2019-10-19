@@ -1,19 +1,23 @@
-# Complementary material
+# Baloo - Artifacts
 
-February 2019 - v1.0  
+October 2019 - v1.1  
 Romain Jacob - jacobr@ethz.ch
 
-This repository contains additional materials related to the following paper
-> *Synchronous Transmissions Made Easy: Design Your Network Stack with Baloo*,  
+This repository contains data (raw and processed), source code, and scripts for Baloo-related publications: 
+
+- *Synchronous Transmissions Made Easy: Design Your Network Stack with Baloo*,  
 Romain Jacob, Jonas Bächli, Reto Da Forno, Lothar Thiele,  
 Proceedings of the 2019 International Conference on Embedded Wireless Systems and Networks (EWSN), February 2019.  
-
-[[Paper](https://www.research-collection.ethz.ch/handle/20.500.11850/324254)]     [[Presentation](https://www.research-collection.ethz.ch/handle/20.500.11850/328814)]
-
-The source code used for the data collection is 
-- [Available on GitHub](https://github.com/ETHZ-TEC/Baloo/tree/v1.0.1)
-- [Archived on Zenodo](https://doi.org/10.5281/zenodo.3510172)  
+[[Paper](https://www.research-collection.ethz.ch/handle/20.500.11850/324254)]     [[Presentation](https://www.research-collection.ethz.ch/handle/20.500.11850/328814)]  
+Source code:
+  - [Available on GitHub](https://github.com/ETHZ-TEC/Baloo/tree/v1.0.1)
+  - [Archived on Zenodo](https://doi.org/10.5281/zenodo.3510172)  
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3510172.svg)](https://doi.org/10.5281/zenodo.3510172)
+- *Facilitating the Design and Evaluation of Reliable Low-power Wireless Networks*,  
+Chapter 3, Romain Jacob,  
+Doctoral Thesis, (Expected) December 2019.  
+[[Thesis](https://doi.org/10.5281/zenodo.3510185)]  
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3510185.svg)](https://doi.org/10.5281/zenodo.3510185)
 
 
 This file serves as top-level documentation for the paper artefacts (including experimental raw data, processing scripts, and final figures). Additional documentation is available in the individual directories whenever relevant.
@@ -61,3 +65,4 @@ Run the msp430-size utility on the binary files `.sky` and `.dpp-cc430` respecti
 |linecount.py 				| Python script used to estimate the number of lines of code|
 |README.md 					| This file|
 |serial\_logs\_processing.m | Matlab script used to process the serial logs and extract the PRR and DC metrics|
+

@@ -1,36 +1,8 @@
-% Copyright (c) 2018-2019, Swiss Federal Institute of Technology (ETH Zurich)
-% All rights reserved.
-% 
-% Redistribution and use in source and binary forms, with or without
-% modification, are permitted provided that the following conditions are met:
-% 
-% * Redistributions of source code must retain the above copyright notice, this
-%   list of conditions and the following disclaimer.
-% 
-% * Redistributions in binary form must reproduce the above copyright notice,
-%   this list of conditions and the following disclaimer in the documentation
-%   and/or other materials provided with the distribution.
-% 
-% * Neither the name of the copyright holder nor the names of its
-%   contributors may be used to endorse or promote products derived from
-%   this software without specific prior written permission.
-% 
-% THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-% AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-% IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-% DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-% FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-% DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-% SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-% CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-% OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-% OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
-%--------------------------------------------------------------------------
-% Serial Log processessing%--------------------------------------------------------------------------
-% EWSN Baloo paper
-% Romain Jacob, February 2019
-%--------------------------------------------------------------------------
+%------------------------------------
+% Serial Log processessing
+%------------------------------------
+% Romain Jacob, September 2018
+%------------------------------------
 
 clear all;
 close all;
@@ -44,14 +16,17 @@ format long;
 % 6 : GMW Sleeping Beauty
 % 7 : Native and GMW LWB
 result_to_parse = 2;
+paper_test = 0; % Set to 1 for re-running the analysis of the Baloo paper tests.
 
 % Define the type of experiment to post-process
 if (result_to_parse == 1)
-    experiment= '/Crystal/Native/';
+%     experiment= '/Crystal/Native/paper/';
+    experiment= '/Crystal/Native/thesis/';
     tests= {'U0', 'U1', 'U20'};
 elseif (result_to_parse == 2)
-%     experiment= '/Crystal/GMW-Sky/';
-    experiment= '/Crystal/GMW-CC430/';
+    experiment= '/Crystal/GMW-Sky/thesis/';
+%     experiment= '/Crystal/GMW-Sky/paper/';
+%     experiment= '/Crystal/GMW-CC430/';
     tests= {'U0', 'U1', 'U20'};
 elseif (result_to_parse == 6)
 %     experiment= '/SleepingBeauty/GMW-CC430/';
@@ -65,10 +40,14 @@ elseif (result_to_parse == 7)
 end
     
 % List of source node IDs
-nodes = [002 003 004 006 007 008 010 011 013 014 015 016 017 018 019 020 022 023 024 025 026 027 028 032 033];
+if paper_test
+    nodes = [002 003 004 006 007 008 010 011 013 014 015 016 017 018 019 020 022 023 024 025 026 027 028 032 033];
+else % list of nodes for the tests re-run for the thesis 
+    nodes = [002 003 004 006 008 010 011 013 015 016 017 018 019 020 022 023 024 025 026 027 028 032 033];
+end
 
 % Define path to FlockLab logs
-path = pwd();
+[result, path] = unix('pwd');
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % The following code should not be changed
@@ -83,7 +62,7 @@ for i=1:numel(tests)
     fprintf('\n%s\n', '+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++');
     fprintf('%s\t%s\n', 'Case :', tests{i}(1:end));
 
-    % Compose serial data file names
+    % Load serial data
     clear csvfile_serial csvsedfile_serial matfile_serial;
     
     csvfile_serial = [test_path '/serial.csv'];
@@ -94,8 +73,6 @@ for i=1:numel(tests)
     matfile_serial_snd = [test_path '/serialsnd.mat'];
     matfile_serial_rcv = [test_path '/serialrcv.mat'];
     
-	% Generate serial data if not yet in directory
-	% otherwise simply load it.
     if (~exist(csvsedfile_serial, 'file'))   
         if (result_to_parse == 1)
             [~,~] = unix(['sed -e "/,E/!d" -e "s/[^:]*:\(.*\):.*/\1/" ' csvfile_serial ' > ' csvsedfile_serial]);
@@ -116,10 +93,12 @@ for i=1:numel(tests)
         elseif (result_to_parse == 7)                
             [~,~] = unix(['sed -e "/FSR:/!d" -e "/[^,],1,/!d" -e "s/[^R]*R: \([0-9]*\).*/\1/" ' csvfile_serial ' > ' csvfile_serial_rcv]);
         else                
-            [~,~] = unix(['sed -e "/R:/!d" -e "s/[^:]*: \([0-9]*\) \([0-9]*\) \([0-9]*\)/\3,\2,\1/" ' csvfile_serial ' > ' csvfile_serial_rcv]);
-            [~,~] = unix(['sed -e "/ S:/!d" -e "s/[^:]*:[^:]*: \([0-9]*\) \([0-9]*\) \([0-9]*\)/\3,\2,\1/" ' csvfile_serial ' > ' csvfile_serial_snd]);
+            [~,~] = unix(['sed -e "/ R:/!d" -e "s/[^:]*:[^:]*: \([0-9]*\) \([0-9]*\)/\2,\1/" ' csvfile_serial ' > ' csvfile_serial_rcv]);
+            [~,~] = unix(['sed -e "/ S:/!d" -e "s/[^:]*:[^:]*: \([0-9]*\) \([0-9]*\)/\2,\1/" ' csvfile_serial ' > ' csvfile_serial_snd]);
         end
     end
+    
+%     sed -e '/R:/!d' -e 's/[^:]*: \([0-9]*\) \([0-9]*\) \([0-9]*\)/\3,\2,\1/' serial.csv
 
     if (~exist(matfile_serial, 'file'))
         g = csvread(csvsedfile_serial);
@@ -128,16 +107,12 @@ for i=1:numel(tests)
         load(matfile_serial);
     end
     
-	% Initialize tracking variables
     nb_pkt_sent_total = 0;
     nb_pkt_sent_unique = 0;
     PRR(1) = NaN;
     SND = NaN;
 
-	% PRR processing
     if (~strcmp(tests{i}, 'U0'))
-		% If U=0, no application packets, therefore no PRR to compute
-    
         if (result_to_parse ~= 7) 
             if (~exist(matfile_serial_snd, 'file'))
                 SND = csvread(csvfile_serial_snd);
@@ -175,7 +150,6 @@ for i=1:numel(tests)
         
     end
     
-	% Duty-cycle processing
     if (result_to_parse == 1)
         fprintf('Average RF DC: %f%%\n', mean(g));
         fprintf('Scaled (without sink): %f%%\n', mean(g)/5);

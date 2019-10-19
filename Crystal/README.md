@@ -22,9 +22,11 @@ The rest of this file is a description of the experiment that were run.
 - **All tests use channel hopping**, following a predifined sequence based on the epoch and TA pair counters. See sequence definition in the `get_channel_epoch()` and `get_channel_epoch_ta()` functions.
 - **All tests use the noise detection feature** 
   - Controlled by the `GMW_CONF_USE_NOISE_DETECTION` parameter.
-  - Settings:  
-   -60 dBm/-105 dBm threshold, 80 threshold crossing to return *high noise*
+  - Settings:
+    * -105 dBm threshold, 80 threshold crossing to return *high noise*
 > We intended the set the threshold to -60 dBm but forgot about the offset of 45 dBm set by default by the TelosB radio module. This is the source of the DC differences we have observed between the original Crystal results and our own experiments. On the DPP, the threshold was correctly set to -60 dBm
+    * -60 dBm threshold, 80 threshold crossing to return *high noise*
+> New series of tests performed with the proper power settings. As expected, the results are now comparable on all platforms.
 
 ## Variable input parameters
 ### 1. Number of source nodes sending a packet in each epoch 
