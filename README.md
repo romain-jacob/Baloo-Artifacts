@@ -7,11 +7,13 @@ This repository contains additional materials related to the following paper
 > *Synchronous Transmissions Made Easy: Design Your Network Stack with Baloo*,  
 Romain Jacob, Jonas Bächli, Reto Da Forno, Lothar Thiele,  
 Proceedings of the 2019 International Conference on Embedded Wireless Systems and Networks (EWSN), February 2019.  
-[Direct Link](https://www.research-collection.ethz.ch/handle/20.500.11850/324254)
+
+[[Paper](https://www.research-collection.ethz.ch/handle/20.500.11850/324254)]     [[Presentation](https://www.research-collection.ethz.ch/handle/20.500.11850/328814)]
 
 The source code used for the data collection is 
 - [Available on GitHub](https://github.com/ETHZ-TEC/Baloo/tree/v1.0.1)
-- [Archived on Zenodo](https://doi.org/10.5281/zenodo.3510172) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3510172.svg)](https://doi.org/10.5281/zenodo.3510172)
+- [Archived on Zenodo](https://doi.org/10.5281/zenodo.3510172)  
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3510172.svg)](https://doi.org/10.5281/zenodo.3510172)
 
 
 This file serves as top-level documentation for the paper artefacts (including experimental raw data, processing scripts, and final figures). Additional documentation is available in the individual directories whenever relevant.
